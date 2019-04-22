@@ -17,9 +17,9 @@ from mq import *
 
 """ This class defines a C-like struct """
 class Payload(Structure):
-    _fields_ = [("id", c_uint32),
-                ("counter", c_uint32),
-                ("temp", c_float)]
+    _fields_ = [("lpg", c_float),
+                ("co", c_float),
+                ("smoke", c_float)]
 
 
 def main():
@@ -42,20 +42,18 @@ def main():
         while(1):
             print ""
             perc = mq.MQPercentage()
-            sys.stdout.write("\r")
-            sys.stdout.write("\033[K")
-            sys.stdout.write("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
-            sys.stdout.flush()
+            print("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm\n" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
             time.sleep(0.1)
-	    payload_out = Payload(007, i, perc["GAS_LPG"])
+
+        payload_out = Payload(perc["GAS_LPG"], perc["GAS_CO"], perc["GAS_SMOKE"])
 	    #charptr = POINTER(c_char)
 	    #POINTER(c_char)
 
         # get gas values
 
-            print "Sending id=%s, counter=%d, temp=%f" % (payload_out.id,
-                                                        payload_out.counter,
-                                                        payload_out.temp)
+            print "Sending id=%f, counter=%f, temp=%f" % (payload_out.lpg,
+                                                        payload_out.co,
+                                                        payload_out.smoke)
             nsent = s.send(payload_out)
             # Alternative: s.sendall(...): coontinues to send data until either
             # all data has been sent or an error occurs. No return value.
@@ -63,9 +61,9 @@ def main():
 
             buff = s.recv(sizeof(Payload))
             payload_in = Payload.from_buffer_copy(buff)
-            print "Received id=%s, counter=%d, temp=%f" % (payload_in.id,
-                                                        payload_in.counter,
-                                                        payload_in.temp)
+            print "Received id=%s, counter=%d, temp=%f" % (payload_in.lpg,
+                                                        payload_in.co,
+                                                        payload_in.smoke)
     finally:
         print "Closing socket"
         s.close()
