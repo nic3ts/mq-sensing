@@ -46,7 +46,7 @@ def main():
             time.sleep(0.1)
             payload_out = Payload(perc["GAS_LPG"], perc["CO"], perc["SMOKE"])
 
-            print "Sending id=%f, counter=%f, temp=%f" % (payload_out.lpg, payload_out.co, payload_out.smoke)
+            print "Sending LPG=%f ppm, CO=%f, SMOKE=%f" % (payload_out.lpg, payload_out.co, payload_out.smoke)
 
             nsent = s.send(payload_out)
             # Alternative: s.sendall(...): coontinues to send data until either
@@ -56,7 +56,7 @@ def main():
 
             buff = s.recv(sizeof(Payload))
             payload_in = Payload.from_buffer_copy(buff)
-            print "Received id=%s, counter=%d, temp=%f" % (payload_in.lpg, payload_in.co, payload_in.smoke)
+            print "Received LPG=%f ppm, CO=%f, SMOKE=%f" % (payload_in.lpg, payload_in.co, payload_in.smoke)
 
     finally:
         print "Closing socket"

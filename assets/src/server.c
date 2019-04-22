@@ -81,7 +81,7 @@ int main() {
         while ((nread=read(csock, buff, BUFFSIZE)) > 0) {
             printf("\nReceived %d bytes\n", nread);
             payload * p = (payload*) buff;
-            printf("Received contents: id=%f, counter=%f, temp=%f\n", p->lpg, p->co, p->smoke);
+            printf("Received contents: LPG=%f ppm, CO=%f, SMOKE=%f\n", p->lpg, p->co, p->smoke);
 
             printf("Sending it back.. ");
             sendMsg(csock, p, sizeof(payload));
