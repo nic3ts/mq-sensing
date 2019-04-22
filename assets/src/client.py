@@ -44,30 +44,23 @@ def main():
             perc = mq.MQPercentage()
             print("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm\n" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
             time.sleep(0.1)
+            payload_out = Payload(perc["GAS_LPG"], perc["GAS_CO"], perc["GAS_SMOKE"])
 
-        payload_out = Payload(perc["GAS_LPG"], perc["GAS_CO"], perc["GAS_SMOKE"])
-	    #charptr = POINTER(c_char)
-	    #POINTER(c_char)
+            print "Sending id=%f, counter=%f, temp=%f" % (payload_out.lpg, payload_out.co, payload_out.smoke)
 
-        # get gas values
-
-            print "Sending id=%f, counter=%f, temp=%f" % (payload_out.lpg,
-                                                        payload_out.co,
-                                                        payload_out.smoke)
             nsent = s.send(payload_out)
             # Alternative: s.sendall(...): coontinues to send data until either
             # all data has been sent or an error occurs. No return value.
+
             print "Sent %d bytes" % nsent
 
             buff = s.recv(sizeof(Payload))
             payload_in = Payload.from_buffer_copy(buff)
-            print "Received id=%s, counter=%d, temp=%f" % (payload_in.lpg,
-                                                        payload_in.co,
-                                                        payload_in.smoke)
+            print "Received id=%s, counter=%d, temp=%f" % (payload_in.lpg, payload_in.co, payload_in.smoke)
+
     finally:
         print "Closing socket"
         s.close()
-
 
 if __name__ == "__main__":
     main()
