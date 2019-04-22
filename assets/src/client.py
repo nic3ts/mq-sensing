@@ -44,7 +44,7 @@ def main():
             perc = mq.MQPercentage()
             print("LPG: %g ppm, CO: %g ppm, Smoke: %g ppm\n" % (perc["GAS_LPG"], perc["CO"], perc["SMOKE"]))
             time.sleep(0.1)
-            payload_out = Payload(perc["GAS_LPG"], perc["GAS_CO"], perc["GAS_SMOKE"])
+            payload_out = Payload(perc["GAS_LPG"], perc["CO"], perc["SMOKE"])
 
             print "Sending id=%f, counter=%f, temp=%f" % (payload_out.lpg, payload_out.co, payload_out.smoke)
 
